@@ -23,7 +23,7 @@
 		<property name="jpaPropertyMap">
 			<map>
 				<entry key="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect"/>
-				<entry key="hibernate.hbm2ddl.auto" value="none"/>
+				<entry key="hibernate.hbm2ddl.auto" value="create"/>
 				<entry key="hibernate.format_sql" value="true"/>
 			</map>
 		</property>
@@ -34,5 +34,12 @@
 	</bean>
 	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property name="url" value="jdbc:mysql://88.196.85.99:55506/fitness_tracker?autoReconnect=true&amp;serverTimezone=Europe/Tallinn"/>
+		<property name="username" value="student"/>
+		<property name="password" value="QyrMvNAQ"/>
+	</bean>
 
 </beans>
