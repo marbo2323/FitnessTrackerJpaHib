@@ -1,0 +1,23 @@
+
+
+--- GoalRepositoryImpl ---
+
+	@RequestMapping(value = "getGoals", method = RequestMethod.GET)
+	public String getGoals(Model model) {
+		List<Goal> goals = goalService.getAllGoals();
+		
+		model.addAttribute("goals", goals);
+		
+		return "getGoals";
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public List<GoalReport> fidAllGoalReports() {
+		
+		Query query = em.createQuery("select new com.pluralsight.model.GoalReport(g.minutes, e.minutes, e.activity) "
+				+ "from Goal g, Exercise e where g.id = e.goal.id");
+		
+		
+		return query.getResultList();
+	}
