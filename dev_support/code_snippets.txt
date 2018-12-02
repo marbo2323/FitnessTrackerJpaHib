@@ -36,3 +36,86 @@
 		
 		return "addGoal";
 	}	
+	
+
+-----  GoalRepository -----
+public interface GoalRepository {
+
+	Goal save(Goal goal);
+
+	List<Goal> loadAll();
+
+	List<GoalReport> fidAllGoalReports();
+}	
+
+--- Goal class annotation ----
+
+@NamedQueries({
+	@NamedQuery(name=Goal.FIND_GOAL_REPORTS, 
+			query = "select new com.pluralsight.model.GoalReport(g.minutes, e.minutes, e.activity) " + 
+			 "from Goal g, Exercise e where g.id = e.goal.id"),
+	@NamedQuery(name = Goal.FIND_ALL_GOALS, query = "select g from Goal g")	
+})
+
+------- GoalRepositoryImpl -----------
+
+@Repository("goalRepository")
+public class GoalRepositoryImpl implements GoalRepository {
+
+	@PersistenceContext
+	private EntityManager em;
+	
+	public Goal save(Goal goal) {
+		
+		if (goal.getId() == null) {
+			em.persist(goal);
+			em.flush();
+		} else {
+			goal = em.merge(goal);
+		}
+		
+		return goal;
+	}
+	
+	public List<Goal> loadAll() {
+		
+		TypedQuery<Goal> query = em.createNamedQuery(Goal.FIND_ALL_GOALS, Goal.class);
+		
+		return query.getResultList();
+	}
+	
+	public List<GoalReport> fidAllGoalReports() {
+		
+		TypedQuery<GoalReport> query = em.createNamedQuery(Goal.FIND_GOAL_REPORTS, GoalReport.class);
+		
+		return query.getResultList();
+	}
+
+}
+
+	
+	
+----- ExerciseRepository -----	
+public interface ExerciseRepository {
+
+	Exercise save(Exercise exercise); 
+}
+	
+	
+--- ExerciseRepositoryImpl class ------
+
+@Repository("exerciseRepository")
+public class ExerciseRepositoryImpl implements ExerciseRepository {
+
+	@PersistenceContext
+	private EntityManager em;
+	
+	public Exercise save(Exercise exercise) {
+		em.persist(exercise);
+		em.flush();
+		return exercise;
+	}
+
+}
+
+	
